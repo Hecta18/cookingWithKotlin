@@ -55,10 +55,10 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 //            modifier = modifier.padding(24.dp)
 //        )
 //    }
-    val expanded = remember { mutableStateOf(false) }
+    var expanded by remember { mutableStateOf(false) }
     //state to not be forgotten after each run & checked for recomposition
     //remember to not be reset after each run
-    val extraPadding = if (expanded.value) 48.dp else 0.dp
+    val extraPadding = if (expanded) 48.dp else 0.dp
 
     Surface(color = MaterialTheme.colorScheme.primary, modifier = modifier.padding(2.dp)) {
 
@@ -71,8 +71,8 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
                 Text("Hello")
                 Text("$name!")
             }
-            ElevatedButton(onClick = {expanded.value = !expanded.value}) {
-                Text(if (expanded.value) "Show less" else "Show more")
+            ElevatedButton(onClick = {expanded = !expanded}) {
+                Text(if (expanded) "Show less" else "Show more")
             }
         }
     }
@@ -87,7 +87,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 //    ){ Greeting("Android") }
 //}
 @Composable
-fun MyApp(
+private fun Greetings(
     modifier: Modifier = Modifier,
     names: List<String> = listOf("World", "Compose")
 ) {
@@ -99,10 +99,25 @@ fun MyApp(
 }
 
 @Composable
-fun OnboardingScreen(modifier: Modifier = Modifier) {
-    // TODO: This state should be hoisted
+fun MyApp(modifier: Modifier = Modifier) {
     var shouldShowOnboarding by remember { mutableStateOf(true) }
+    //using a by keyword instead of the =. This is a property delegate that
+    // saves you from typing .value every time.
 
+    Surface(modifier) {
+        if (shouldShowOnboarding) {
+            OnboardingScreen(onContinueClicked = { shouldShowOnboarding = false })
+        } else {
+            Greetings()
+        }
+    }
+}
+
+@Composable
+fun OnboardingScreen(
+    modifier: Modifier = Modifier,
+    onContinueClicked: () -> Unit
+                     ) {
     Column(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -111,7 +126,8 @@ fun OnboardingScreen(modifier: Modifier = Modifier) {
         Text("Welcome to the Basics Codelab!")
         Button(
             modifier = Modifier.padding(vertical = 24.dp),
-            onClick = { shouldShowOnboarding = false }
+            onClick = onContinueClicked
+
         ) {
             Text("Continue")
         }
@@ -124,6 +140,15 @@ fun GreetingPreview() {
     BasicCodelabTheme {
 //        Greeting("Android")
 //        MyApp()
-        OnboardingScreen()
+//        OnboardingScreen()
+        Greetings()
+    }
+}
+
+@Preview(showBackground = true, widthDp = 320)
+@Composable
+fun MyAppPreview() {
+    BasicCodelabTheme {
+        MyApp()
     }
 }
