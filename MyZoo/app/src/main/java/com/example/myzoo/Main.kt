@@ -1,5 +1,25 @@
 package com.example.myzoo
 
+//higher order function
+fun processAnimals(animals: List<Animal>, action: (Animal) -> Unit) {
+    //apply action to each animal
+    for (animal in animals) {
+        action(animal)
+    }
+}
+//exhaustive when
+fun handleEvent(event: ZooEvent) {
+    when (event) {
+        is ZooEvent.AnimalFed -> println("${event.animalName} ya comio.")
+        is ZooEvent.VisitorArrived -> println("¡Bienvenido, ${event.visitorName}!")
+        is ZooEvent.ZooClosing -> println("El zoológico está cerrado.")
+    }
+}
+//extension function
+fun Animal.getAnimalInfo(): String {
+    return "nombre: $name, habitat: $habitat, edad: $age"
+}
+
 fun main(){
     //animals
     val leo: Animal = Lion("Leo", Habitats.JUNGLE, 12, 20)
@@ -19,31 +39,12 @@ fun main(){
     println(jungleAnimals)
     println(animalNames)
     println(animalHabitats)
-    //higher order function
-    fun processAnimals(animals: List<Animal>, action: (Animal) -> Unit) {
-        //apply action to each animal
-        for (animal in animals) {
-            action(animal)
-        }
-    }
     //calling processAnimals
     processAnimals(animals) { animal -> println("${animal.name} tiene ${animal.age} años.") }
-    //exhaustive when
-    fun handleEvent(event: ZooEvent) {
-        when (event) {
-            is ZooEvent.AnimalFed -> println("${event.animalName} ya comio.")
-            is ZooEvent.VisitorArrived -> println("¡Bienvenido, ${event.visitorName}!")
-            is ZooEvent.ZooClosing -> println("El zoológico está cerrado.")
-        }
-    }
     //calling handleEvent
     handleEvent(ZooEvent.AnimalFed("Pat"))
     handleEvent(ZooEvent.VisitorArrived("Juancho"))
     handleEvent(ZooEvent.ZooClosing)
-    //extension function
-    fun Animal.getAnimalInfo(): String {
-        return "nombre: $name, habitat: $habitat, edad: $age"
-    }
     //calling extension function
     println(leo.getAnimalInfo())
     //using companion object
