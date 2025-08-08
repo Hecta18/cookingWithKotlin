@@ -21,7 +21,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,7 +38,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 //            modifier = modifier.padding(24.dp)
 //        )
 //    }
-    var expanded by remember { mutableStateOf(false) }
+    var expanded by rememberSaveable { mutableStateOf(false) }
     //state to not be forgotten after each run & checked for recomposition
     //remember to not be reset after each run
     val extraPadding = if (expanded) 48.dp else 0.dp
@@ -105,7 +105,7 @@ fun OnboardingScreen(
 
 @Composable
 fun MyApp(modifier: Modifier = Modifier) {
-    var shouldShowOnboarding by remember { mutableStateOf(true) }
+    var shouldShowOnboarding by rememberSaveable { mutableStateOf(true) }
     //using a by keyword instead of the =. This is a property delegate that
     // saves you from typing .value every time.
 
